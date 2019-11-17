@@ -6,7 +6,7 @@ let ListMovie= fs.readFileSync("C:/Users/soraw/DigitalHouse/dh-movies/movies.jso
 let ListMovieArray =  JSON.parse(ListMovie);
 
 var i = 0;
-function MoviesFullList() {
+function MoviesFullLista() {
     const titleArray = [];
     for (let i = 0; i < ListMovieArray.total_movies; i++) {
         titleArray.push("\n"+ListMovieArray.movies[i].title);
@@ -35,6 +35,24 @@ let TextHomeFooterFive= "v. Preguntas Frecuentes";
 let TextCarteleraTitle= "En Cartelera: ";
 let TextCarteleraName= "i. Título: ";
 let TextCarteleraReseña= "ii. Reseña: ​";
+
+
+ function MoviesFullList() {
+     const titleArray = [];
+     for (let i = 0; i < ListMovieArray.total_movies; i++) {
+        titleArray.push(ListMovieArray.movies[i].title+"\n");
+        titleArray.push(ListMovieArray.movies[i].vote_average);
+        titleArray.push("\n"+ListMovieArray.movies[i].overview+ "\n"+"\n");
+        } return titleArray 
+   }
+var final = MoviesFullList().filter(e => e >=7)
+var cuentafinal = final.length
+
+const suma = final.reduce(function(a, b){return a + b});
+const promedio = suma/cuentafinal
+const promediado = parseFloat(promedio).toFixed(2)
+
+let rating = parseFloat(promediado)
 
 let TextVoteTitle= "Mas Votadas.";
 let TextVoteListTitle= "i. Título";
@@ -81,8 +99,8 @@ function FaqsFullList(){
     if (req.url == "/"){
         res.end (TextHomeTitle + "\n" + 
         "Total de Peliculas: "+ListMovieArray.total_movies + "\n" + 
-        MoviesFullList().sort()
-         + "\n" + 
+        MoviesFullLista().sort().join(" ")
+         + "\n" +  "\n" +
         TextHomeFooter+ "\n" + 
         TextHomeFooterOne +  "\n" +
         TextHomeFooterTwo+  "\n" +
@@ -99,8 +117,10 @@ function FaqsFullList(){
         )
     }
     if (req.url == "/mas-votadas"){
-        res.end("MAS VOTADAS+"+ "\n" + 
-        "MASVOTADASPOR7PUNTOS" + "\n" 
+        res.end(TextVoteTitle+ "\n" + 
+        "Total de peliculas: " + cuentafinal +  "\n" +
+        "Rating Promedio: " + rating +  "\n" +
+        "Listados de Peliculas: " + "\n"+ "\n"+MoviesFullList().join(" ")
         
         );
     }
