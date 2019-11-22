@@ -3,7 +3,7 @@ const fs = require("fs");
     
 let TextHomeTitle= "​Bienvenidos a DH Movies el mejor sitio para encontrar las mejores películas, incluso mucho mejor que Netflix, Cuevana y PopCorn​.";
 let ListMovie= fs.readFileSync("C:/Users/soraw/DigitalHouse/dh-movies/movies.json", 'utf8');
-let ListMovieArray =  JSON.parse(ListMovie);
+let ListMovieArray =  JSON.parse(ListMovie, " ");
 
 var i = 0;
 function MoviesFullLista() {
@@ -22,6 +22,7 @@ function CarteleraFullList(){
     }
     return titleArray;
 }
+
 
 
 
@@ -55,12 +56,33 @@ const promediado = parseFloat(promedio).toFixed(2)
 let rating = parseFloat(promediado)
 
 let TextVoteTitle= "Mas Votadas.";
-let TextVoteListTitle= "i. Título";
-let TextVoteListRating= "ii. Rating​";
-let TextVoteListReseña= "iii. Reseña​";
+let TextVoteListTitle= "ii. Título: ";
+let TextVoteListRating= "i. Rating​: ";
+
+let pelisMasVotadas = ListMovieArray.movies.filter((unaMovie) => unaMovie.vote_average >= 7);
+
+let contenidoMasVotadas = 'Más Votadas \n\n';
+
+contenidoMasVotadas += `Total de películas: ${pelisMasVotadas.length} \n\n`;
+
+
+pelisMasVotadas.forEach(unaPelicula => {
+    contenidoMasVotadas += `TITULO: ${unaPelicula.title}\n`;
+    contenidoMasVotadas += `RATING: ${unaPelicula.vote_average}\n`;
+    contenidoMasVotadas += `RESEÑA: ${unaPelicula.overview}\n`;
+})
+
+function MoviesFullListOverview() {
+    const titleArray = [];
+   for (let i = 0; i < pelisMasVotadas.length; i++) {  
+    titleArray.push(TextVoteListRating+pelisMasVotadas[i].vote_average+"\n");
+    titleArray.push(TextVoteListTitle+pelisMasVotadas[i].title+"\n");
+    titleArray.push("iii. Reseña​: " +pelisMasVotadas[i].overview+"\n");
+  } return titleArray 
+}
 
 let ListTheaters= fs.readFileSync("C:/Users/soraw/DigitalHouse/dh-movies/theaters.json", 'utf8');
-let ListTheatersArray =  JSON.parse(ListTheaters);
+let ListTheatersArray =  JSON.parse(ListTheaters, " ");
 
 function TheatersFullList(){
     const titleArray = [];
@@ -82,7 +104,7 @@ let TextContactFill= "​¿Tenés algo para contarnos? Nos encanta escuchar a nu
 
 let TextAnswerTitle= "Preguntas Frecuentes";
 let ListFaqs= fs.readFileSync("C:/Users/soraw/DigitalHouse/dh-movies/faqs.json", 'utf8');
-let ListFaqsArray =  JSON.parse(ListFaqs);
+let ListFaqsArray =  JSON.parse(ListFaqs, " ");
 
 function FaqsFullList(){
     const titleArray = [];
@@ -95,7 +117,7 @@ function FaqsFullList(){
 
 
  http.createServer(function (req, res){
-    res.writeHead(200, {"Content-Type": "text/plain"});
+    res.writeHead(200, {"Content-Type": "text/plain;charset=UTF-8"});
     if (req.url == "/"){
         res.end (TextHomeTitle + "\n" + 
         "Total de Peliculas: "+ListMovieArray.total_movies + "\n" + 
@@ -120,7 +142,10 @@ function FaqsFullList(){
         res.end(TextVoteTitle+ "\n" + 
         "Total de peliculas: " + cuentafinal +  "\n" +
         "Rating Promedio: " + rating +  "\n" +
-        "Listados de Peliculas: " + "\n"+ "\n"+MoviesFullList().join(" ")
+        "Listados de Peliculas: " + "\n"+ "\n"+
+        MoviesFullListOverview().join(" ")
+
+
         
         );
     }
